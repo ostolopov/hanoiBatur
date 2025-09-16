@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <chrono>
+
 #include "utils.h"
 
 class Solution {
@@ -82,6 +84,11 @@ int main() {
     int n;
     std::cout << "Введите количество дисков для решения задачи: " << std::endl;
     getInt(n, 1, INT_MAX);
+    auto start = std::chrono::high_resolution_clock::now();
     solv.solveHanoi(n);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    std::cout << "Время выполнения: " << duration.count() << " секунд" << std::endl;
+
     return 0;
 }
