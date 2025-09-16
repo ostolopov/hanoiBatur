@@ -1,95 +1,87 @@
 #include <iostream>
-#include <utility>
+#include <vector>
+#include <string>
 #include "utils.h"
 
-/*
- 1. Цель:
- Разработать программу которая будет выполнять задачу "Ханойская башня". Входными данными является количество дисков n с которыми будет работать программа.
- Выходные данные - визуализация перехода данных из начального положения в конечное. Количество ходов 2^n - 1. Каждый ход должен строго соответствовать правилам
- алгоритма, то есть переместить один верхний диск и запрет на помещение большего диска на меньший
-
- 2. Построение модели:
- Диски: Идентифицируются своим размером , то есть числом от 1 до n
- Стержни: Идентифицируются своими именами pole1, pole2, pole3
- Состояние: Неявно управляется стеком вызовов рекурсивной функции. Его задача — перенести k дисков с одного стержня на другой
-
- 3. Построение алгоритма:
-  На вход функции входят число (длина диска), название башни на которой находится диск, стержень на который должен переместиться диск и вспомогательный стержень
-  Псеводкод:
-  func (n , A, C, B) {
-    if n == 0
-        завершить работу
-    else if n == 1
-        вывести перемещение с pole1 на pole3
-    else
-        func (n - 1, pole1, pole3, pole2)
-        вывести перемещение с pole1 на pole 2
-        func(n - 1, pole3, pole2, pole1)
-  }
-
-  4. Проерка правильности алгоритма:
-
- */
-
-// 5. реализация алгоритма в виде программы
 class Solution {
 public:
+    void solveHanoi(int disks) {
+        n = disks;
+        counter = 0;
+        std::cout << "Решение для " << n << " дисков:" << std::endl;
+        initTowers(disks);
+        printTowers();
+        func(n, 0, 2, 1);
+        std::cout << "Всего ходов: " << counter << std::endl;
+    }
+
+private:
     int n;
     long long counter = 0;
     std::string pole1 = "A";
     std::string pole2 = "B";
     std::string pole3 = "C";
-    //const std::vector<std::string> poles = {"A", "B", "C"};
-    // (n, source, target, auxiliary) A C B
-    void func(int n, std::string& pole1, std::string& pole3, std::string& pole2) {
-        if (n <= 0)
-            return;
+    std::vector<std::vector<int>> towers;
+
+    void initTowers(int disks) {
+        towers.clear();
+        towers.resize(3);
+        for (int i = disks; i >= 1; --i)
+            towers[0].push_back(i);
+    }
+
+    std::string drawDisk(int size, int maxSize) {
+        if (size == 0)
+            return std::string(maxSize, ' ') + "|" + std::string(maxSize, ' ');
+        int width = 2 * size - 1;
+        int padding = maxSize - size;
+        return std::string(padding, ' ') + std::string(width, '#') + std::string(padding, ' ');
+    }
+
+    void printTowers() {
+        std::cout << "\nТекущее состояние башен:\n";
+        for (int level = n - 1; level >= 0; --level) {
+            for (int t = 0; t < 3; ++t) {
+                int diskSize = (level < (int)towers[t].size()) ? towers[t][level] : 0;
+                std::cout << drawDisk(diskSize, n) << "   ";
+            }
+            std::cout << "\n";
+        }
+        std::cout << std::string(n, '=') << "A" << std::string(n, '=') << "   ";
+        std::cout << std::string(n, '=') << "B" << std::string(n, '=') << "   ";
+        std::cout << std::string(n, '=') << "C" << std::string(n, '=') << "\n\n";
+    }
+
+    void moveDisk(int from, int to) {
+        int disk = towers[from].back();
+        towers[from].pop_back();
+        towers[to].push_back(disk);
+        counter++;
+        std::cout << "Ход " << counter << ": ";
+        std::cout << "Переместить диск " << disk << " со стержня "
+                  << (from == 0 ? pole1 : from == 1 ? pole2 : pole3)
+                  << " на стержень "
+                  << (to == 0 ? pole1 : to == 1 ? pole2 : pole3) << std::endl;
+        printTowers();
+    }
+
+    void func(int n, int from, int to, int aux) {
+        if (n <= 0) return;
         if (n == 1) {
-            counter++;
-            std::cout << "Ход " << counter << ": ";
-            std::cout << "Переместить диск 1 со стержня " << pole1 << " на стержень " << pole3 << std::endl;
-        }
-        else {
-            func(n - 1, pole1, pole2, pole3);
-            counter++;
-            std::cout << "Ход " << counter << ": ";
-            std::cout << "Переместить диск " << n << " со стержня " << pole1 << " на стержень " << pole3 << std::endl;
-            func(n - 1, pole2, pole3, pole1);
-        }
-    }
-
-    void solveHanoi(int disks) {
-        n = disks;
-        counter = 0;
-        std::cout << "Решение для " << n << " дисков:" << std::endl;
-        func(n, pole1, pole3, pole2);
-        std::cout << "Всего ходов: " << counter << std::endl;
-    }
-
-    void printTower () {
-        for (int i = 0; i < n; i++) {
-
+            moveDisk(from, to);
+        } else {
+            func(n - 1, from, aux, to);
+            moveDisk(from, to);
+            func(n - 1, aux, to, from);
         }
     }
 };
 
-int main () {
+int main() {
     Solution solv;
     int n;
     std::cout << "Введите количество дисков для решения задачи: " << std::endl;
-    std::cin >> n;
+    getInt(n, 1, INT_MAX);
     solv.solveHanoi(n);
+    return 0;
 }
-
-/*
-6. Анализ алгоритма и его сложности:
-алгоритм выполняется за 2^n - 1
-Время выполнения алгоритма O(2^n)
-Пространственная сложность O(1)
-
-
-7. Проверка программы:
-
-8. Cоставление документации:
-
- */
