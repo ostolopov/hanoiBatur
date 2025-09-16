@@ -84,5 +84,6 @@ func(n, from, to, aux):
 
 | Рисунок 1 | Рисунок 2 | Рисунок 3 |
 |--------------------|------------|-------------------|
-| <img src="https://github.com/user-attachments/assets/113437ae-e524-4098-8147-8cb04930f71a" width="300"> | <img src="https://github.com/user-attachments/assets/1b82adb5-39d6-46c3-a3e7-8d6ef8333653" width="300"> | <img src="https://github.com/user-attachments/assets/047617af-5818-44ee-bd2e-f1e266539d54" width="300"> |
+| <img width="1800" height="1169" alt="Screenshot 2025-09-16 at 23 53 34" src="https://github.com/user-attachments/assets/4264f0a2-b207-4fa0-b6ea-9afb9c40cffc" /> | <img width="1800" height="1169" alt="Screenshot 2025-09-16 at 23 53 51" src="https://github.com/user-attachments/assets/d5cb0952-bd05-4370-987a-eeda765832cc" /> | <img width="1800" height="1169" alt="Screenshot 2025-09-16 at 23 53 58" src="https://github.com/user-attachments/assets/5338b779-00fc-428b-bb85-642282de1dba" /> |
+
 
