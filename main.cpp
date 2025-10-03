@@ -17,6 +17,12 @@ public:
         std::cout << "Всего ходов: " << counter << std::endl;
     }
 
+    long long countMovesExact(int disks) {
+        long long cnt = 0;
+        countFunc(disks, 0, 2, 1, cnt);
+        return cnt;
+    }
+
 private:
     int n;
     long long counter = 0;
@@ -77,6 +83,17 @@ private:
             func(n - 1, aux, to, from);
         }
     }
+
+    void countFunc(int n, int from, int to, int aux, long long &cnt) {
+        if (n <= 0) return;
+        if (n == 1) {
+            cnt++;
+        } else {
+            countFunc(n - 1, from, aux, to, cnt);
+            cnt++;
+            countFunc(n - 1, aux, to, from, cnt);
+        }
+    }
 };
 
 int main() {
@@ -84,11 +101,26 @@ int main() {
     int n;
     std::cout << "Введите количество дисков для решения задачи: " << std::endl;
     getInt(n, 1, INT_MAX);
-    auto start = std::chrono::high_resolution_clock::now();
-    solv.solveHanoi(n);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration = end - start;
-    std::cout << "Время выполнения: " << duration.count() << " секунд" << std::endl;
+
+    //раскоментить если нужна визуализация
+
+    // auto start_vis = std::chrono::high_resolution_clock::now();
+    // solv.solveHanoi(n);
+    // auto end_vis = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<double> duration_vis =
+    //     std::chrono::duration_cast<std::chrono::milliseconds>(end_vis - start_vis);
+    // std::cout << "Время выполнения с визуализацией: " << duration_vis.count() << " миллисекунд" << std::endl;
+
+    // без визуализации
+
+    auto start_no_vis = std::chrono::high_resolution_clock::now();
+    long long moves = solv.countMovesExact(n);
+    auto end_no_vis = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration_no_vis =
+        std::chrono::duration_cast<std::chrono::milliseconds>(end_no_vis - start_no_vis);
+    std::cout << "Подсчет без визуализации: " << moves << " ходов" << std::endl;
+    std::cout << "Время выполнения без визуализации: " << duration_no_vis.count() << " миллисекунд" << std::endl;
 
     return 0;
 }
+
